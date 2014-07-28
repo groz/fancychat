@@ -25,7 +25,7 @@ type ChatModule() as this =
     inherit NancyModule()
     
     do
-        this.Get.["/"] <- fun ctx -> box "Hello, Nancy!"
+        this.Get.["/"] <- fun ctx -> box this.View.["Index"]
 
 [<EntryPoint>]
 let main argv = 
