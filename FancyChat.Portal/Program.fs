@@ -31,7 +31,7 @@ type ChatModule() as this =
 [<EntryPoint>]
 let main argv = 
     
-    let url = "http://localhost:8080"
+    let url = "http://*:8080"
 
     use webApp = WebApp.Start<Startup> url
     printfn "Nancy+SignalR server started on %s..." url
