@@ -17,7 +17,8 @@ type Startup() =
 type ChatHub() =
     inherit Microsoft.AspNet.SignalR.Hub()
 
-    member this.Send(name, message): unit =
+    // NB! do not forget to specify types here, generating hub proxy will fail otherwise
+    member this.Send(name: string, message: string): unit =
         this.Clients.All ? addMessage(name, message)
 
 // Nancy module to serve HTTP responses
@@ -36,4 +37,4 @@ let main argv =
     printfn "Nancy+SignalR server started on %s..." url
     System.Console.ReadLine() |> ignore
 
-    0
+    0 // return code

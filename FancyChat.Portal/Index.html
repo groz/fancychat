@@ -1,8 +1,53 @@
 ﻿<html>
-    <head>
-        <title>FancyChat</title>
-    </head>
-    <body>
-        <h1>Hello, FancyChat!</h1>
-    </body>
+<head>
+    <title>FancyChat</title>
+</head>
+<body>
+    <h1>Hello, FancyChat!</h1>
+
+    <form id="messageForm">
+        <input type="text" id="message" />
+        <input type="submit" value="Send" />
+        <ul id="chat"></ul>
+    </form>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.1.min.js"></script>
+    <script src="/signalr/hubs"></script>
+
+    <script>
+        $(function () {
+
+            var chat = $.connection.chatHub;
+            var message = $("#message");
+            var signalr = $.connection.hub.start();
+
+            // Get the user name and store it to prepend to messages.
+            var userName = prompt('Enter your name:', '');
+
+            message.focus();
+
+            chat.client.addMessage = function (name, msg) {
+                $("#chat").append("<li><strong>" + htmlEncode(name) +
+                    ":</strong> " + htmlEncode(msg) + "</li>");
+            };
+
+            signalr.done(function () {
+                $("#messageForm").submit(function () {
+                    var text = message.val();
+                    chat.server.send(userName, text);
+                    message.val("").focus(); // clear message
+                    return false; // prevent form from reloading the page
+                });
+            });
+
+        });
+        
+        // This optional function html-encodes messages for display in the page.
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
+</body>
 </html>
